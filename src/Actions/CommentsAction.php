@@ -5,7 +5,7 @@ namespace Parallax\FilamentComments\Actions;
 use Filament\Support\Enums\Width;
 use Filament\Actions\Action;
 use Illuminate\Contracts\View\View;
-use Parallax\FilamentComments\Models\FilamentComment;
+use Illuminate\Database\Eloquent\Model;
 
 class CommentsAction extends Action
 {
@@ -22,13 +22,13 @@ class CommentsAction extends Action
             ->hiddenLabel()
             ->icon(config('filament-comments.icons.action'))
             ->color('gray')
-            ->badge($this->record?->filamentComments()->count())
+            ->badge(fn(Model $record): int => $record?->filamentComments()->count())
             ->slideOver()
-            ->modalContentFooter(fn (): View => view('filament-comments::component'))
+            ->modalContentFooter(fn(): View => view('filament-comments::component'))
             ->modalHeading(__('filament-comments::filament-comments.modal.heading'))
             ->modalWidth(Width::Medium)
             ->modalSubmitAction(false)
             ->modalCancelAction(false)
-            ->visible(fn (): bool => auth()->user()->can('viewAny', config('filament-comments.comment_model')));
+            ->visible(fn(): bool => auth()->user()->can('viewAny', config('filament-comments.comment_model')));
     }
 }
